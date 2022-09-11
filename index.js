@@ -11,7 +11,7 @@ const Employee = require("./lib/employee")
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 
-
+var theTeam = [];
 
 const employeeQuestions =  [ {
   type: 'input',
@@ -133,7 +133,9 @@ function init() {
 
   })
     .then(manager => {
-      fs.writeFileSync("emp.json",JSON.stringify(manager))
+      theTeam.push(manager);
+      console.log(theTeam);
+      // fs.writeFileSync("emp.json",JSON.stringify(manager))
       toMenu();
     })
     
@@ -167,12 +169,17 @@ function getEngineer(){
 
   })
     .then(engineer => {
-      var data = fs.readFileSync('emp.json');
-      console.log(data);
-      var obj = JSON.parse(data);
-      console.log(obj)
-      obj.push(engineer);
-      fs.writeFileSync("emp.json",JSON.stringify(obj))
+      theTeam.push(engineer);
+      console.log(theTeam);
+      // console.log(engineer);
+      // const data = fs.readFileSync('emp.json');
+      // const obj = JSON.parse(data);
+      // const newnew = Object.assign({}, engineer, obj);
+      // console.log(newnew);
+      // console.log(JSON.stringify(obj))
+      // const newJ = {...engstr, ...obj};
+      // console.log(newJ);
+      // fs.writeFileSync("emp2.json",JSON.stringify(newnew))
       toMenu();
     })
     
@@ -181,3 +188,4 @@ function getEngineer(){
 
 
 init();
+
