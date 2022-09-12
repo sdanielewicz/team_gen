@@ -1,9 +1,10 @@
+// declarations
 const fs = require('fs');
 const HTMLparse = require('node-html-parser');
 var employeeCards = [];
 
 
-
+// functions
 function writeCards(employeeCards) {
     var allCards = "";
 
@@ -38,9 +39,8 @@ function readEmployee() {
                 break;
         }
     });
-    
+
     writeCards(employeeCards);
-    
 }
 
 function writeManager(employee) {
@@ -116,30 +116,5 @@ function genHTML() {
     return htmlContent;
 }
 
-// module.exports = {readEmployee};
-// module.exports = {genHTML};
-
-module.exports = {readEmployee, genHTML};
-
-
-//   const data = fs.readFileSync('../dist/index2.html');
-//   const root = HTMLparse.parse(data);
-
-
-// // var root = HTMLparse.parse(html)
-// console.log(root.structure);
-
-// const body = root.querySelector('body');
-// body.set_content(`${engineerCard}`).innerHTML;
-// fs.writeFileSync('../dist/index2.html', root.toString());
-
-//   const data = fs.readFileSync('../dist/index2.html');
-//   const root = HTMLparse.parse(data);
-
-
-// // var root = HTMLparse.parse(html)
-// console.log(root.structure);
-
-// const body = root.querySelector('body');
-// body.set_content(`${engineerCard}`).innerHTML;
-// fs.writeFileSync('../dist/index2.html', root.toString());
+// export functions
+module.exports = { readEmployee, genHTML };
