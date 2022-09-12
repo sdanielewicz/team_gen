@@ -10,24 +10,21 @@ const fs = require('fs');
 const Employee = require("./lib/employee")
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
+const Intern = require('./lib/intern');
+const generate = require('./src/generateHTML');
 
 var theTeam = [];
 
-const employeeQuestions =  [ {
-  type: 'input',
-  name: 'name',
-  message: 'What the name of the Employee?',
-},
-{
-  type: 'input',
-name: 'id',
-message: 'What the employee id?',
-},
-{
-type: 'input',
-name: 'email',
-message: 'What the employee email?',
-},
+const menu =  [
+  {
+    type: 'list',
+    name: 'role',
+    message: 'What is the employee\'s role?',
+    choices: [
+    'Engineer',
+    'Intern',
+    'Exit']
+  },
 ]
 
 const managerQuestions =  [ {
@@ -51,20 +48,6 @@ message: 'What the manager email?',
   message: 'What the manager office number?',
   },
   ];
-
-
-
-
-const menu =  [
-  {
-    type: 'list',
-    name: 'role',
-    message: 'What is the employee\'s role?',
-    choices: [
-    'Engineer',
-    'Intern']
-  },
-]
 
 const engineerQuestions = [
   {
@@ -90,38 +73,34 @@ message: 'What the email?',
 
 ];
 
+
 const internQuestions = [
-    {
-        type: 'input',
-        name: 'name',
-        message: 'What the name of the Employee?',
-      },
-      {
-        type: 'list',
-        name: 'role',
-        message: 'What is the employee\'s role?',
-        choices: [
-        'Engineer',
-        'Intern']
-      },
-]
+  {
+  type: 'input',
+  name: 'name',
+  message: 'What the name??',
+},
+{
+  type: 'input',
+name: 'id',
+message: 'What the id?',
+},
+{
+type: 'input',
+name: 'email',
+message: 'What the email?',
+},
+{
+  type: 'input',
+  name: 'school',
+  message: 'What school?',
+  },
 
-
-// employee class 
-
-
-
-
-
-
-
-// process input and add to
-// new employee
-// logic for employee types to add to subclass
-
+];
 
 
 function init() {
+
 
     inquirer.prompt(managerQuestions)
   .then(answers => {
@@ -134,8 +113,6 @@ function init() {
   })
     .then(manager => {
       theTeam.push(manager);
-      console.log(theTeam);
-      // fs.writeFileSync("emp.json",JSON.stringify(manager))
       toMenu();
     })
     
@@ -148,12 +125,18 @@ function toMenu(){
     switch (answer.role) {
       case "Engineer":
       getEngineer();
-
       break;
+
       case "Intern":
-        break;
+      getIntern();
+      break;
+      
       case "Exit":
-        break;
+          fs.writeFileSync("./dist/emp.json", JSON.stringify(theTeam));
+          generate.readEmployee();
+          console.log("IT RAN");
+          // function call for read emp goes here        
+      break;
     }
   });
 }
@@ -171,15 +154,25 @@ function getEngineer(){
     .then(engineer => {
       theTeam.push(engineer);
       console.log(theTeam);
-      // console.log(engineer);
-      // const data = fs.readFileSync('emp.json');
-      // const obj = JSON.parse(data);
-      // const newnew = Object.assign({}, engineer, obj);
-      // console.log(newnew);
-      // console.log(JSON.stringify(obj))
-      // const newJ = {...engstr, ...obj};
-      // console.log(newJ);
-      // fs.writeFileSync("emp2.json",JSON.stringify(newnew))
+      toMenu();
+    })
+    
+    .catch((err) => console.error(err));
+}
+
+function getIntern(){
+  inquirer.prompt(internQuestions)
+  .then(answers => {
+  
+    const intern = new Intern(answers.name, answers.id, answers.email, answers.school);
+    intern.role = "Intern";
+
+    return intern;
+
+  })
+    .then(intern => {
+      theTeam.push(intern);
+      console.log(theTeam);
       toMenu();
     })
     
@@ -187,5 +180,7 @@ function getEngineer(){
 }
 
 
+  fs.writeFileSync('./dist/index2.html', generate.genHTML());
+  fs.writeFileSync('./dist/emp.json',"");
 init();
 

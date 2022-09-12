@@ -1,83 +1,100 @@
 const fs = require('fs');
+const HTMLparse = require('node-html-parser');
+var employeeCards = [];
 
-fs.writeFileSync('../dist/index2.html',generateHTML());
 
-function readIndex (){
-    const data = fs.readFileSync('../dist/index2.html');
-    const index = JSON.parse(data);
-    return index;
+
+function writeCards(employeeCards) {
+    var allCards = "";
+
+    employeeCards.forEach(entry => {
+        allCards = allCards + entry;
+    })
+
+    const data = fs.readFileSync('./dist/index2.html');
+    const root = HTMLparse.parse(data);
+
+    const body = root.querySelector('body');
+    body.set_content(allCards).innerHTML;
+    fs.writeFileSync('./dist/index2.html', root.toString());
 }
 
+function readEmployee() {
+    let data = fs.readFileSync("./dist/emp.json");
+    let employeeList = JSON.parse(data);
 
-function readEmployee (){
-let data = fs.readFileSync("../dist/emp.json");
-let employeeList = JSON.parse(data);
-console.log(employeeList);
+    employeeList.forEach(employee => {
+        switch (employee.role) {
+            case "Manager":
+                writeManager(employee);
+                break;
 
+            case "Engineer":
+                writeEngineer(employee);
+                break;
 
-employeeList.forEach(employee => {
-    switch (employee.role) {
-        case "Manager":
-            writeManager(employee);
-            break;
-
-        case "Engineer":
-        writeEngineer(employee);
-        break;
-  
-        case "Intern":
-        // writeIntern();
-        break;
-      }
-      generateHTML();
-});
-}
-
-function writeManager(employee){
-    console.log("MAN"+employee.name);
+            case "Intern":
+                writeIntern(employee);
+                break;
+        }
+    });
     
+    writeCards(employeeCards);
+    
+}
 
-    const managerCard = `
+function writeManager(employee) {
+    let managerCard = `
+ <div class="card" style="width: 18rem;">
+ <div class="card-body">
+ <h5 class="card-title">${employee.name}</h5>
+ <h6 class="card-title">${employee.role}</h6>
+
+ <p class="card-text">ID:${employee.id}</p>
+ <p class="card-text">Email:<a href="mailto:${employee.email}">${employee.email}</a></p>
+   <p class="card-text">${employee.office}</p>
+ </div>
+</div>
+ `
+    employeeCards.push(managerCard);
+    return employeeCards;
+}
+
+function writeEngineer(employee) {
+    let engineerCard = `
     <div class="card" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">${employee.name}</h5>
-      <h6 class="card-title">${employee.role}</h5>
-
-      <p class="card-text">${employee.id}</p>
-      <p class="card-text">${employee.email}</p>
-      <p class="card-text">${employee.office}</p>
-
-
+      <h6 class="card-title">${employee.role}</h6>
+   
+      <p class="card-text">ID:${employee.id}</p>
+      <p class="card-text">Email:<a href="mailto:${employee.email}">${employee.email}</a></p>
+      <p class="card-text">Github:<a href="https://github.com/${employee.github}" target="_blank">${employee.github}</a></p>
     </div>
-  </div>
+   </div>
   `
-  readIndex();
-
-  return managerCard;
+    employeeCards.push(engineerCard);
+    return employeeCards;
 }
 
-function writeEngineer(employee){
-    console.log("ENG"+employee.name);
-    
-
-    const engineerCard = `
+function writeIntern(employee) {
+    let internCard = `
     <div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title">${employee.name}</h5>
-      <h6 class="card-title">${employee.role}</h5>
-
-      <p class="card-text">${employee.id}</p>
-      <p class="card-text">${employee.email}</p>
-      <p class="card-text">${employee.github}</p>
-
-
+    <h5 class="card-title">${employee.name}</h5>
+    <h6 class="card-title">${employee.role}</h6>
+ 
+    <p class="card-text">ID:${employee.id}</p>
+    <p class="card-text">Email:<a href="mailto:${employee.email}">${employee.email}</a></p>
+      <p class="card-text">${employee.school}</p>
     </div>
-  </div>
+   </div>
   `
-  return engineerCard;
+    employeeCards.push(internCard);
+    return employeeCards;
 }
 
-function generateHTML (){
+function genHTML() {
     const htmlContent = `<!DOCTYPE html>
 <html lang="en">
 
@@ -93,14 +110,36 @@ function generateHTML (){
 
 <body>
 
-
 </body>
 </html>`;
 
-// fs.writeToFile('../dist/index2.html', htmlContent);
-return htmlContent;
+    return htmlContent;
 }
 
+// module.exports = {readEmployee};
+// module.exports = {genHTML};
 
-readEmployee();
+module.exports = {readEmployee, genHTML};
 
+
+//   const data = fs.readFileSync('../dist/index2.html');
+//   const root = HTMLparse.parse(data);
+
+
+// // var root = HTMLparse.parse(html)
+// console.log(root.structure);
+
+// const body = root.querySelector('body');
+// body.set_content(`${engineerCard}`).innerHTML;
+// fs.writeFileSync('../dist/index2.html', root.toString());
+
+//   const data = fs.readFileSync('../dist/index2.html');
+//   const root = HTMLparse.parse(data);
+
+
+// // var root = HTMLparse.parse(html)
+// console.log(root.structure);
+
+// const body = root.querySelector('body');
+// body.set_content(`${engineerCard}`).innerHTML;
+// fs.writeFileSync('../dist/index2.html', root.toString());
