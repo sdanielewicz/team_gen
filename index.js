@@ -7,7 +7,6 @@
 
 const inquirer = require('inquirer');
 const fs = require('fs');
-const Employee = require("./lib/employee")
 const Manager = require('./lib/manager');
 const Engineer = require('./lib/engineer');
 const Intern = require('./lib/intern');
@@ -133,9 +132,7 @@ function toMenu(){
       
       case "Exit":
           fs.writeFileSync("./dist/emp.json", JSON.stringify(theTeam));
-          generate.readEmployee();
-          console.log("IT RAN");
-          // function call for read emp goes here        
+          generate.readEmployee();       
       break;
     }
   });
